@@ -15,13 +15,8 @@ void choque();
 void mostrar(uint8_t data);
 
 int main(){
-    /*HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD mode = 0;
-    GetConsoleMode(hStdin, &mode);
-    SetConsoleMode(hStdin, mode & (~ENABLE_ECHO_INPUT));*/
-    
-    SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE), 10);
-    int menu = 0;
+    SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE), 10); // letras verdes
+    int menu;
     int exit = 0;
     
     if (validarPassword()){
@@ -29,15 +24,19 @@ int main(){
     	while(!exit){
     		system("cls");
     		skip = 0;
-    	
+    														  
 	    	std::cout << "-----Presione-----" << std::endl <<
-	    			 "1. Auto Fantastico" << std::endl <<
-	    			 "2. El Choque"		  << std::endl <<
-	    			 "3. La Carrera"      << std::endl <<
-	    			 "4. Arkanoid" 	      << std::endl <<
-	    			 "5. Salir"			  << std::endl;
+		    			 "1. Auto Fantastico" << std::endl <<
+		    			 "2. El Choque"		  << std::endl <<
+		    			 "3. La Carrera"      << std::endl <<
+		    			 "4. Arkanoid" 	      << std::endl <<
+		    			 "5. Salir"			  << std::endl;
 	    			 
-	    	menu = getch(); // getch devuelve char, '1' = 49
+	    			 
+	    	do{
+	    		menu = getch(); // getch devuelve char, '1' = 49
+	    	}while(menu < 49 || menu > 53);
+	    	
 	    	
 	    	switch(menu){
 	    		case 49:
