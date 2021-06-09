@@ -2,70 +2,121 @@
 #include <windows.h>
 #include <conio.h>
 #include <cstdint>
-
-static bool skip = false;
-unsigned long int velocidad[4] = {50000000,50000000,50000000,50000000};
+#include <stdlib.h>
 
 bool validarPassword();
 bool stringCompare(char* , char*);
-void retardo(unsigned long int);
-void autoFantastico();
-void carrera();
-void choque();
+void retardo(unsigned long int*,bool*);
+void autoFantastico(unsigned long int*,bool*);
+void carrera(unsigned long int*,bool*);
+void semaforoCarrera(unsigned long int*,bool*);
+void choque(unsigned long int*,bool*);
+void sirena(unsigned long int*,bool*);
+void oficina(unsigned long int*,bool*);
 void mostrar(uint8_t data);
 
 int main(){
     SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE), 10); // letras verdes
-    int menu;
+    unsigned long int velocidad[7] = {800,1000,1000,10000,1500,1500,15000};
+    int menu = 0;
     int exit = 0;
+    bool skip;
+    bool escrituraDesc; //escribir la descripcion de la secuencia, surge de evitar usar system("cls")
+
     
     if (validarPassword()){
-    	retardo(500000000);
+    	retardo(&velocidad[6], &skip);
     	while(!exit){
     		system("cls");
     		skip = 0;
+    		escrituraDesc = 1;
     														  
-	    	std::cout << "-----Presione-----" << std::endl <<
-		    			 "1. Auto Fantastico" << std::endl <<
-		    			 "2. El Choque"		  << std::endl <<
-		    			 "3. La Carrera"      << std::endl <<
-		    			 "4. Arkanoid" 	      << std::endl <<
-		    			 "5. Salir"			  << std::endl;
+	    	std::cout << "------Presione------" << std::endl <<
+		    			 "1. Auto Fantastico"   << std::endl <<
+		    			 "2. El Choque"		    << std::endl <<
+		    			 "3. La Carrera"        << std::endl <<
+		    			 "4. Semaforo Carrera"  << std::endl <<
+		    			 "5. Sirena"		    << std::endl <<
+		    			 "6. Decoracion Oficina"<< std::endl <<
+		    			 "7. Salir"				<< std::endl;
 	    			 
 	    			 
 	    	do{
 	    		menu = getch(); // getch devuelve char, '1' = 49
-	    	}while(menu < 49 || menu > 53);
+	    	}while(menu < 49 || menu > 55);
 	    	
+	    	system("cls");
 	    	
 	    	switch(menu){
 	    		case 49:
 					while(!skip){
-						autoFantastico();
+						if(escrituraDesc){
+							std::cout << "El Auto Fantastico !!!" << std::endl 
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							escrituraDesc = 0;
+						}
+						autoFantastico(&velocidad[0],&skip);
 					}
 					break;
 				case 50:
 					while(!skip){
-						choque();
+						if(escrituraDesc){
+							std::cout << "El Choque !!!" << std::endl 
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							escrituraDesc = 0;
+						}
+						choque(&velocidad[1],&skip);
 					}
 				 	break;
 				case 51:
 					while(!skip){
-						carrera();
+						if(escrituraDesc){
+							std::cout << "La Carrera !!!" << std::endl 
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							escrituraDesc = 0;
+						}
+						carrera(&velocidad[2],&skip);
 					}
 				  	break;
-				case 52: break;
-				case 53: exit = 1; break;
+				case 52:
+					while(!skip){
+						if(escrituraDesc){
+							std::cout << "El Semaforo de Carrera !!!" << std::endl 
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							escrituraDesc = 0;
+						}
+						semaforoCarrera(&velocidad[3],&skip);
+					}
+				 	break;
+			 	case 53:
+					while(!skip){
+						if(escrituraDesc){
+							std::cout << "La Sirena !!!" << std::endl 
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							escrituraDesc = 0;
+						}
+						sirena(&velocidad[4],&skip);
+					}
+				 	break;
+			 	case 54:
+					while(!skip){
+						if(escrituraDesc){
+							std::cout << "La Decoracion de Oficina !!!" << std::endl 
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							escrituraDesc = 0;
+						}
+						oficina(&velocidad[5],&skip);
+					}
+				 	break;
+				case 55: exit = 1; break;
 	    		default: break;
 	    	}	
     	}	
     }
     
-    system("cls");
-    
     std::cout << "Fin";
     
-    retardo(500000000);
+    retardo(&velocidad[6], &skip);
     
 	return 0;
 }
@@ -103,9 +154,33 @@ bool validarPassword(){
 	}
 }
 
-void retardo(unsigned long int n){
-	while(n){
-		n--;
+void retardo(unsigned long int* n,bool* skip){
+	char control = 'f';
+	unsigned long int contador = *(n);
+	while(contador){
+		if(kbhit()){
+			control = getch();
+			switch (control){
+				case 's':
+					*(skip) = true;
+					return;
+					break;
+				case 'u':
+					contador /= n[0];
+					n[0] += 100;
+					contador *= n[0];
+					break;
+				case 'd':
+					if(n[0] != 100){
+						contador /= n[0];
+						n[0] -= 100;
+						contador *= n[0];
+					}
+					break;
+				default:break;
+			}
+		}
+		contador--;
 	}
 }
 
@@ -116,17 +191,14 @@ bool stringCompare(char* strUser, char* password){
 	return true;
 }
 
-void autoFantastico(){
+void autoFantastico(unsigned long int* v,bool* skip){
 	uint8_t inicio = 0x80;
 	for(int i = 0; i < 8; i++){
 		mostrar(inicio);
 		inicio >>= 1;
-		skip = GetAsyncKeyState(0x53);
-		if(skip) return;
-		if(GetAsyncKeyState(0x26)) velocidad[0] -= 5000000;
-		if(GetAsyncKeyState(0x28)) velocidad[0] += 5000000;
-		std::cout << std::endl << velocidad[0];
-		retardo(velocidad[0]);
+		std::cout << "    El retardo actual es: "<< v[0] << " ";
+		retardo(v, skip);
+		if(*skip) return;
 	}
 	
 	inicio = 0x02;
@@ -134,51 +206,122 @@ void autoFantastico(){
 	for(int i = 0; i < 6; i++){
 		mostrar(inicio);
 		inicio <<= 1;
-		skip = GetAsyncKeyState(0x53);
-		if(skip) return;
-		if(GetAsyncKeyState(0x26)) velocidad[0] -= 5000000;
-		if(GetAsyncKeyState(0x28)) velocidad[0] += 5000000;
-		std::cout << std::endl << velocidad[0];
-		retardo(velocidad[0]);
+		std::cout << "    El retardo actual es: "<< v[0] << " ";
+		retardo(v, skip);
+		if(*skip) return;
 	}
 }
 
 void mostrar(uint8_t inicio){
-	system("cls");
+	printf("\r");
+	
+	std::cout << "     ";//Separar la secuencia de la pantalla
 	for(uint8_t mascara = 0x80; mascara > 0; mascara >>= 1){
 		if(inicio & mascara) std::cout << '*';
 		else std::cout << '_';
 	}
 }
 
-void carrera() {   
-	uint8_t table[] = {0x01,0x01,0x02,0x02,0x04,0x04,0x08,0x08,0x11,0x12,0x24,0x28,0x50,0x60,0xC0,0x80};
-    for (int i = 0; i < 16; ++i) {
-		mostrar(table[i]);
-		skip = GetAsyncKeyState(0x53);
-		if(skip) return;
-		if(GetAsyncKeyState(0x26)) velocidad[2] -= 5000000;
-		if(GetAsyncKeyState(0x28)) velocidad[2] += 5000000;
-		std::cout << std::endl << velocidad[2];
-		retardo(velocidad[2]);
+void carrera(unsigned long int* v,bool* skip) {   
+	uint8_t arreglo[] = {0x01,0x01,0x02,0x02,0x04,0x04,0x08,0x08,0x11,0x12,0x24,0x28,0x50,0x60,0xC0,0x80};
+    for (int i = 0; i < 16; i++) {
+		mostrar(arreglo[i]);
+		std::cout << "    El retardo actual es: "<< v[0] << " ";
+		retardo(v, skip);
+		if(*skip) return;
 	} 
 }
 
-void choque() {
+void choque(unsigned long int* v,bool* skip) {
 	uint8_t arreglo[] = {
 		0x81, 0x42, 0x24,
 		0x18, 0x18, 0x24,
 		0x42
 	};
 	
-	for (int i = 0; i < 7; ++i) {
+	for (int i = 0; i < 7; i++) {
 		mostrar(arreglo[i]);
-		skip = GetAsyncKeyState(0x53);
-		if(skip) return;
-		if(GetAsyncKeyState(0x26)) velocidad[1] -= 5000000;
-		if(GetAsyncKeyState(0x28)) velocidad[1] += 5000000;
-		std::cout << std::endl << velocidad[1];
-		retardo(velocidad[1]);
+		std::cout << "    El retardo actual es: "<< v[0] << " ";
+		retardo(v, skip);
+		if(*skip) return;
+	}
+}
+
+void semaforoCarrera(unsigned long int* v,bool* skip){
+	uint8_t arreglo[] = {
+		0xff,0xff,0x3f,0x3f,
+		0x0f,0x0f,0x0,0xf0,
+		0x00,0x00,0xc0,0xc0,
+	};
+	
+	for (int i = 0; i < 12; i++) {
+		mostrar(arreglo[i]);
+		std::cout << "    El retardo actual es: "<< v[0] << " ";
+		retardo(v, skip);
+		if(*skip) return;
+	}
+}
+
+void oficina(unsigned long int* v,bool* skip){
+	uint8_t arreglo[] = {
+		0x0c,0x8c,0x4c,0x2c,
+		0x1c,0x1a,0x19,0x18,
+		0x18,0x19,0x1a,0x1c,
+		0x2c,0x4c,0x8c,0x0c
+	};
+	
+	for (int i = 0; i < 16; i++) {
+		mostrar(arreglo[i]);
+		std::cout << "    El retardo actual es: "<< v[0] << " ";
+		retardo(v, skip);
+		if(*skip) return;
+	}
+}
+
+void sirena(unsigned long int* v,bool* skip){
+	uint8_t inicio = 0xf0;
+	for(int i = 0; i < 8; i++){
+		mostrar(inicio);
+		std::cout << "    El retardo actual es: "<< v[0] << " ";
+		retardo(v,skip);
+		if(*skip) return;
+	}
+	inicio >>= 4;
+	for(int i = 0; i < 8; i++){
+		mostrar(inicio);
+		std::cout << "    El retardo actual es: "<< v[0] << " ";
+		retardo(v,skip);
+		if(*skip) return;
+	}
+	inicio <<= 4;
+	for(int j = 0; j < 2 ; j++){
+		for(int i = 0; i < 2; i++){
+			mostrar(inicio);
+			std::cout << "    El retardo actual es: "<< v[0] << " ";
+			retardo(v,skip);
+			if(*skip) return;
+		}
+		for(int i = 0; i < 2; i++){
+			mostrar(0x00);
+			std::cout << "    El retardo actual es: "<< v[0] << " ";
+			retardo(v,skip);
+			if(*skip) return;
+		}
+	}
+	inicio >>= 4;
+	for(int j = 0; j < 2 ; j++){
+		for(int i = 0; i < 2; i++){
+			mostrar(inicio);
+			std::cout << "    El retardo actual es: "<< v[0] << " ";
+			retardo(v,skip);
+			if(*skip) return;
+		}
+		for(int i = 0; i < 2; i++){
+			mostrar(0x00);
+			std::cout << "    El retardo actual es: "<< v[0] << " ";
+			retardo(v,skip);
+			if(*skip) return;
+		}
 	}
 }
     
