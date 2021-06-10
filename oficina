@@ -1,11 +1,16 @@
 		MOV		R0,#velocidad							; puntero a unsigned int
 		MOV		R1,#skip								; puntero a bool
+		mov		r4,#123								; cargamos los registros
+		mov		r5,#112								; r4-r8 con datos para observar
+		mov		r6,#123								; que se presevan luego de
+		mov		r7,#255								; pasar por la funcion
+		mov		r8,#556
 		MOV		SP,	#pilaptr							; puntero a pila
 		BL		oficina
 		END
 		
 oficina
-		STMFD	SP!,{R4,R5,R6,R7,R8,LR}				; push a la pila
+		STMFD	SP!,{R4,R5,R6,R7,R8,LR}					; push a la pila
 		MOV		R4,#arreglo
 		MOV		R5,R0
 		MOV		R6,R1
@@ -21,13 +26,13 @@ for
 		MOV		R1,R6									; R0 = skip
 		BL		retardo
 		LDRB		R0,[R6,#0]
-		CMP		R6,#1									; if (skip == true) return;
+		CMP		R0,#1									; if (*skip) return;
 		BEQ		return
 		SUBS		R8,R8,#1
 		ADD		R7,R7,#1
 		BNE		for
-		BEQ		return
-		
+		B		return									;al final de la funcion vuelve
+		;como	es void no retorna nada
 mostrar
 		MOV		PC,LR
 		
@@ -43,10 +48,10 @@ return
 		
 		
 		
-velocidad	DCD		4
-skip		DCD		4
+velocidad	DCD		1500
+skip		DCD		0
 		
-arreglo	DCB		0x0c,0x8c,0x4c,0x2c,0x1c,0x1a,0x19,0x18,0x18,0x19,0x1a,0x1c,0x2c,0x4c,0x8c,0x0c0
+arreglo	DCB		0x0c,0x8c,0x4c,0x2c,0x1c,0x1a,0x19,0x18,0x18,0x19,0x1a,0x1c,0x2c,0x4c,0x8c,0x0c
 		
 pila		FILL		40
 pilaptr	DCD		1
