@@ -12,7 +12,7 @@ void carrera(unsigned long int*,bool*);
 void semaforoCarrera(unsigned long int*,bool*);
 void choque(unsigned long int*,bool*);
 void sirena(unsigned long int*,bool*);
-void oficina(unsigned long int*,bool*);
+void pendulo(unsigned long int*,bool*);
 void mostrar(uint8_t data);
 
 int main(){
@@ -22,7 +22,6 @@ int main(){
     int exit = 0;
     bool skip;
     bool escrituraDesc; //escribir la descripcion de la secuencia, surge de evitar usar system("cls")
-
     
     if (validarPassword()){
     	retardo(&velocidad[6], &skip);
@@ -37,7 +36,7 @@ int main(){
 		    			 "3. La Carrera"        << std::endl <<
 		    			 "4. Semaforo Carrera"  << std::endl <<
 		    			 "5. Sirena"		    << std::endl <<
-		    			 "6. Decoracion Oficina"<< std::endl <<
+		    			 "6. Pendulo"			<< std::endl <<
 		    			 "7. Salir"				<< std::endl;
 	    			 
 	    			 
@@ -101,11 +100,11 @@ int main(){
 			 	case 54:
 					while(!skip){
 						if(escrituraDesc){
-							std::cout << "La Decoracion de Oficina !!!" << std::endl 
+							std::cout << "El Pendulo !!!" << std::endl 
 							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
 							escrituraDesc = 0;
 						}
-						oficina(&velocidad[5],&skip);
+						pendulo(&velocidad[5],&skip);
 					}
 				 	break;
 				case 55: exit = 1; break;
@@ -156,7 +155,8 @@ bool validarPassword(){
 
 void retardo(unsigned long int* n,bool* skip){
 	char control = 'f';
-	unsigned long int contador = *(n);
+	float porcentajeCambio = *n;
+	unsigned long int contador = *n;
 	while(contador){
 		if(kbhit()){
 			control = getch();
@@ -166,15 +166,15 @@ void retardo(unsigned long int* n,bool* skip){
 					return;
 					break;
 				case 'u':
-					contador /= n[0];
+					porcentajeCambio = 100 / porcentajeCambio + 1;
+					contador *= porcentajeCambio;
 					n[0] += 100;
-					contador *= n[0];
 					break;
 				case 'd':
 					if(n[0] != 100){
-						contador /= n[0];
+						porcentajeCambio = 1 - 100 / porcentajeCambio;
+						contador *= porcentajeCambio;
 						n[0] -= 100;
-						contador *= n[0];
 					}
 					break;
 				default:break;
@@ -249,12 +249,11 @@ void choque(unsigned long int* v,bool* skip) {
 
 void semaforoCarrera(unsigned long int* v,bool* skip){
 	uint8_t arreglo[] = {
-		0xff,0xff,0x3f,0x3f,
-		0x0f,0x0f,0x0,0xf0,
-		0x00,0x00,0xc0,0xc0,
+		0x00,0xc0,0xf0,
+		0xfc,0xff,0xff
 	};
 	
-	for (int i = 0; i < 12; i++) {
+	for (int i = 0; i < 6; i++) {
 		mostrar(arreglo[i]);
 		std::cout << "    El retardo actual es: "<< v[0] << " ";
 		retardo(v, skip);
@@ -262,7 +261,7 @@ void semaforoCarrera(unsigned long int* v,bool* skip){
 	}
 }
 
-void oficina(unsigned long int* v,bool* skip){
+void pendulo(unsigned long int* v,bool* skip){
 	uint8_t arreglo[] = {
 		0x0c,0x8c,0x4c,0x2c,
 		0x1c,0x1a,0x19,0x18,
