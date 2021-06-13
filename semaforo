@@ -1,0 +1,57 @@
+		MOV		R0,#velocidad							; puntero a unsigned int
+		MOV		R1,#skip								; puntero a bool
+		mov		r4,#123								; cargamos los registros
+		mov		r5,#112								; r4-r8 con datos para observar
+		mov		r6,#123								; que se presevan luego de
+		mov		r7,#255								; pasar por la funcion
+		mov		r8,#556
+		MOV		SP,	#pilaptr							; puntero a pila
+		BL		semaforo
+		END
+		
+semaforo
+		STMFD	SP!,{R4,R5,R6,R7,R8,LR}					; push a la pila
+		MOV		R4,#arreglo
+		MOV		R5,R0
+		MOV		R6,R1
+		MOV		R7,#0									; indice
+		MOV		R8,#6									;contador
+		
+for
+		LDRB		R0,[R4,R7]								; R0 = arreglo[i]
+		BL		mostrar
+		LDR		R0,[R5,#0]								; R0 = v[0]
+		BL		cout
+		MOV		R0,R5									; R0 = v
+		MOV		R1,R6									; R0 = skip
+		BL		retardo
+		LDRB		R0,[R6,#0]
+		CMP		R0,#1									; if (*skip) return;
+		BEQ		return
+		SUBS		R8,R8,#1
+		ADD		R7,R7,#1
+		BNE		for
+		B		return									;al final de la funcion vuelve
+		;como	es void no retorna nada
+mostrar
+		MOV		PC,LR
+		
+cout
+		MOV		PC,LR
+		
+retardo
+		MOV		PC,LR
+		
+return
+		LDMFD	SP!,{R4,R5,R6,R7,R8,LR}				; pop a la pila
+		MOV		PC,LR
+		
+		
+		
+velocidad	DCD		1500
+skip		DCD		0
+		
+arreglo	DCB		0x00,0xc0,0xf0,0xfc,0xff,0xff
+		
+pila		FILL		40
+pilaptr	DCD		1

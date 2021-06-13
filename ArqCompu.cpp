@@ -17,7 +17,7 @@ void mostrar(uint8_t data);
 
 int main(){
     SetConsoleTextAttribute(GetStdHandle (STD_OUTPUT_HANDLE), 10); // letras verdes
-    unsigned long int velocidad[7] = {800,1000,1000,10000,1500,1500,15000};
+    unsigned long int velocidad[7] = {800,1000,1000,20000,1500,1500,15000};
     int menu = 0;
     int exit = 0;
     bool skip;
@@ -31,13 +31,13 @@ int main(){
     		escrituraDesc = 1;
     														  
 	    	std::cout << "------Presione------" << std::endl <<
-		    			 "1. Auto Fantastico"   << std::endl <<
-		    			 "2. El Choque"		    << std::endl <<
-		    			 "3. La Carrera"        << std::endl <<
-		    			 "4. Semaforo Carrera"  << std::endl <<
-		    			 "5. Sirena"		    << std::endl <<
-		    			 "6. Pendulo"			<< std::endl <<
-		    			 "7. Salir"				<< std::endl;
+		    			 "1. Auto Fantastico"         << std::endl <<
+		    			 "2. El Choque"		            << std::endl <<
+		    			 "3. La Carrera"              << std::endl <<
+		    			 "4. Semaforo Carrera"        << std::endl <<
+		    			 "5. Sirena"		              << std::endl <<
+		    			 "6. Pendulo"			            << std::endl <<
+		    			 "7. Salir"			            	<< std::endl;
 	    			 
 	    			 
 	    	do{
@@ -51,7 +51,8 @@ int main(){
 					while(!skip){
 						if(escrituraDesc){
 							std::cout << "El Auto Fantastico !!!" << std::endl 
-							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" 
+							<< std::endl;
 							escrituraDesc = 0;
 						}
 						autoFantastico(&velocidad[0],&skip);
@@ -61,7 +62,8 @@ int main(){
 					while(!skip){
 						if(escrituraDesc){
 							std::cout << "El Choque !!!" << std::endl 
-							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" 
+							<< std::endl;
 							escrituraDesc = 0;
 						}
 						choque(&velocidad[1],&skip);
@@ -71,7 +73,8 @@ int main(){
 					while(!skip){
 						if(escrituraDesc){
 							std::cout << "La Carrera !!!" << std::endl 
-							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" 
+							<< std::endl;
 							escrituraDesc = 0;
 						}
 						carrera(&velocidad[2],&skip);
@@ -81,7 +84,8 @@ int main(){
 					while(!skip){
 						if(escrituraDesc){
 							std::cout << "El Semaforo de Carrera !!!" << std::endl 
-							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" 
+							<< std::endl;
 							escrituraDesc = 0;
 						}
 						semaforoCarrera(&velocidad[3],&skip);
@@ -91,7 +95,8 @@ int main(){
 					while(!skip){
 						if(escrituraDesc){
 							std::cout << "La Sirena !!!" << std::endl 
-							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" 
+							<< std::endl;
 							escrituraDesc = 0;
 						}
 						sirena(&velocidad[4],&skip);
@@ -101,7 +106,8 @@ int main(){
 					while(!skip){
 						if(escrituraDesc){
 							std::cout << "El Pendulo !!!" << std::endl 
-							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" << std::endl;
+							<< "Presione 'u' para aumentar el retardo y 'd' para disminuirlo" 
+							<< std::endl;
 							escrituraDesc = 0;
 						}
 						pendulo(&velocidad[5],&skip);
@@ -111,9 +117,12 @@ int main(){
 	    		default: break;
 	    	}	
     	}	
+    }else{
+    	retardo(&velocidad[6], &skip);
+    	return 0;
     }
     
-    std::cout << "Fin";
+    std::cout << "Hasta Luego !!!";
     
     retardo(&velocidad[6], &skip);
     
@@ -223,7 +232,10 @@ void mostrar(uint8_t inicio){
 }
 
 void carrera(unsigned long int* v,bool* skip) {   
-	uint8_t arreglo[] = {0x01,0x01,0x02,0x02,0x04,0x04,0x08,0x08,0x11,0x12,0x24,0x28,0x50,0x60,0xC0,0x80};
+	uint8_t arreglo[] = {0x01,0x01,0x02,0x02,
+											 0x04,0x04,0x08,0x08,
+											 0x11,0x12,0x24,0x28,
+											 0x50,0x60,0xC0,0x80};
     for (int i = 0; i < 16; i++) {
 		mostrar(arreglo[i]);
 		std::cout << "    El retardo actual es: "<< v[0] << " ";
