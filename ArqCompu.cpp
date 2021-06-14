@@ -175,13 +175,13 @@ void retardo(unsigned long int* n,bool* skip){
 					return;
 					break;
 				case 'u':
-					porcentajeCambio = 100 / porcentajeCambio + 1;
+					porcentajeCambio = 100 / n[0] + 1;
 					contador *= porcentajeCambio;
 					n[0] += 100;
 					break;
 				case 'd':
 					if(n[0] != 100){
-						porcentajeCambio = 1 - 100 / porcentajeCambio;
+						porcentajeCambio = 1 - 100 / n[0];
 						contador *= porcentajeCambio;
 						n[0] -= 100;
 					}
