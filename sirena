@@ -67,7 +67,7 @@ for4
 		MOV		R8,#2
 		
 for5
-		MOV		R0,R4										; R0 = R4
+		MOV		R0,#0										; R0 = 0
 		BL		mostrar
 		LDR		R0,[R5,#0]									; R0 = v[0]
 		BL		cout
@@ -105,7 +105,7 @@ for7
 		MOV		R8,#2
 		
 for8
-		MOV		R0,R4										; R0 = R4
+		MOV		R0,#0
 		BL		mostrar
 		LDR		R0,[R5,#0]									; R0 = v[0]
 		BL		cout
